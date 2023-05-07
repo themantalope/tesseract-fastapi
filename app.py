@@ -22,9 +22,12 @@ async def ocr_image(files: List[UploadFile] = File(...)):
     """
     results = []
     for file in files:
-        image = Image.open(file.file)
-        text = image_to_string(image)
-        results.append({"filename": file.filename, "text": text})
+        try:
+            image = Image.open(file.file)
+            text = image_to_string(image)
+            results.append({"filename": file.filename, "text": text})
+        except Exception as e:
+            results.append({"filename": file.filename, "error": f"Failed to process the image.\n{e}"})
     return results
 
 @app.get("/ocr")
@@ -46,6 +49,6 @@ async def ocr_image_urls(urls: List[str] = Query(...)):
             image = Image.open(BytesIO(response.content))
             text = image_to_string(image)
             results.append({"url": url, "text": text})
-        except requests.exceptions.RequestException as e:
-            results.append({"url": url, "error": "Failed to fetch the image from the provided URL."})
+        except Exception as e:
+            results.append({"url": url, "error": f"Failed to process the image from the provided URL.\n{e}"})
     return results
