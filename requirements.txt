@@ -1,0 +1,8 @@
+# requirements.txt
+fastapi==0.95.1
+gunicorn
+pytesseract
+uvicorn
+Pillow
+python-multipart==0.0.6
+requests==2.30.0
